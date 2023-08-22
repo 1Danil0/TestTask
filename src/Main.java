@@ -27,7 +27,8 @@ public class Main {
                 String outputFileName = scanner.next();
                 scanner.nextLine();
 
-                mergeSort(typeOfSort, typeOfValue, outputFileName, inputFiles);
+                    mergeSort(typeOfSort, typeOfValue, outputFileName, inputFiles);
+
             }
             if(c == 2){
                 w = false;
@@ -35,12 +36,11 @@ public class Main {
         }
         scanner.close();
     }
-    public static void mergeSort(String typeOfSort, String typeOfValue, String outputFileName, String... strings) {
+    public static void mergeSort(String typeOfSort, String typeOfValue, String outputFileName, String... strings){
         String line;
         if (typeOfValue.equalsIgnoreCase("s")) {
             String[] outputArray = new String[0];
             for (int i = 0; i < strings.length; i++) {
-
                 try (BufferedReader reader = new BufferedReader(new FileReader(strings[i]))){
                     StringBuilder builder = new StringBuilder("");
                     //Сканирую входной файл
@@ -70,12 +70,11 @@ public class Main {
                         outputArray[j] = temporaryArray[j];
                     }
                 } catch (FileNotFoundException e) {
-                    throw new RuntimeException(e);
+                    System.out.println("Вы ввели что-то не то " + e.getMessage());
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    System.out.println("Вы ввели что-то не то " + e.getMessage());
                 }
-
-                try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFileName))) {
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFileName))){
                     //Разворачиваю массив, Если сортировка указана по убыванию
                     if (typeOfSort.equalsIgnoreCase("d")) {
                         for (int j = 0, k = outputArray.length - 1; j < k; j++, k--) {
@@ -89,8 +88,9 @@ public class Main {
                         writer.write(outputArray[j] + "\n");
                     }
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    System.out.println("Вы ввели что-то не то " + e.getMessage());
                 }
+
             }
 
         } else {
