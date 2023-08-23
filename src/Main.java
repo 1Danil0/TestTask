@@ -1,4 +1,7 @@
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 
@@ -27,16 +30,17 @@ public class Main {
                 String outputFileName = scanner.next();
                 scanner.nextLine();
 
-                    mergeSort(typeOfSort, typeOfValue, outputFileName, inputFiles);
-
+                mergeSort(typeOfValue, typeOfSort, outputFileName, inputFiles);
             }
             if(c == 2){
                 w = false;
             }
         }
         scanner.close();
+        // /C:/Users/zer0c/Desktop/Butusov/testtask/input1.txt
+        // /C:/Users/zer0c/Desktop/Butusov/testtask/output.txt
     }
-    public static void mergeSort(String typeOfSort, String typeOfValue, String outputFileName, String... strings){
+    public static void mergeSort(String typeOfValue, String typeOfSort, String outputFileName, String... strings){
         String line;
         if (typeOfValue.equalsIgnoreCase("s")) {
             String[] outputArray = new String[0];
@@ -45,6 +49,10 @@ public class Main {
                     StringBuilder builder = new StringBuilder("");
                     //Сканирую входной файл
                     while ((line = reader.readLine()) != null) {
+                        line.trim();
+                        if(line.contains(" ")){
+                            continue;
+                        }
                         builder.append(line + "\n");
                     }
                     String[] inputArray = builder.toString().split("\n");
@@ -90,7 +98,6 @@ public class Main {
                 } catch (IOException e) {
                     System.out.println("Вы ввели что-то не то " + e.getMessage());
                 }
-
             }
 
         } else {
@@ -99,6 +106,10 @@ public class Main {
                 try (BufferedReader reader = new BufferedReader(new FileReader(strings[i]))) {
                     StringBuilder builder = new StringBuilder("");
                     while ((line = reader.readLine()) != null) {
+                        line.trim();
+                        if(line.contains(" ")){
+                            continue;
+                        }
                         builder.append(line + "\n");
                     }
                     String[] array = builder.toString().split("\n");
@@ -145,5 +156,9 @@ public class Main {
                 throw new RuntimeException(e);
             }
         }
+    }
+    public static <T> List<T> createList(T typeOfValue){
+        List<T> list = new ArrayList<>();
+        return list;
     }
 }
