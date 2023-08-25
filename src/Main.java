@@ -37,8 +37,6 @@ public class Main {
             }
         }
         scanner.close();
-        // /C:/Users/zer0c/Desktop/Butusov/testtask/input1.txt
-        // /C:/Users/zer0c/Desktop/Butusov/testtask/output.txt
     }
     public static void mergeSort(String typeOfValue, String typeOfSort, String outputFileName, String... strings){
         String line;
