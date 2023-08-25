@@ -1,9 +1,7 @@
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
-
 
 public class Main {
     public static void main(String[] args) {
@@ -30,135 +28,148 @@ public class Main {
                 String outputFileName = scanner.next();
                 scanner.nextLine();
 
-                mergeSort(typeOfValue, typeOfSort, outputFileName, inputFiles);
+                merge(typeOfValue, typeOfSort, outputFileName, inputFiles);
             }
             if(c == 2){
                 w = false;
             }
         }
         scanner.close();
-        // /C:/Users/zer0c/Desktop/Butusov/testtask/input1.txt
-        // /C:/Users/zer0c/Desktop/Butusov/testtask/output.txt
     }
-    public static void mergeSort(String typeOfValue, String typeOfSort, String outputFileName, String... strings){
+    //чтение исходного файла
+    public static String[] readInputFile(String fileName){
         String line;
-        if (typeOfValue.equalsIgnoreCase("s")) {
-            String[] outputArray = new String[0];
-            for (int i = 0; i < strings.length; i++) {
-                try (BufferedReader reader = new BufferedReader(new FileReader(strings[i]))){
-                    StringBuilder builder = new StringBuilder("");
-                    //Сканирую входной файл
-                    while ((line = reader.readLine()) != null) {
-                        line.trim();
-                        if(line.contains(" ")){
-                            continue;
-                        }
-                        builder.append(line + "\n");
-                    }
-                    String[] inputArray = builder.toString().split("\n");
-                    String[] temporaryArray = new String[inputArray.length + outputArray.length];
-                    int inputPosition = 0;
-                    int outputPosition = 0;
-                    //Сортировка
-                    for (int j = 0; j < temporaryArray.length; j++) {
-                        if (inputPosition == inputArray.length) {
-                            temporaryArray[j] = outputArray[outputPosition++];
-                        } else if (outputPosition == outputArray.length) {
-                            temporaryArray[j] = inputArray[inputPosition++];
-                        } else if (inputArray[inputPosition].compareTo(outputArray[outputPosition]) < 0) {
-                            temporaryArray[j] = inputArray[inputPosition++];
-                        } else {
-                            temporaryArray[j] = outputArray[outputPosition++];
-                        }
-                    }
-                    //Заношу в выходной массив
-                    //Если файлов несколько, то из всех получится один большой массив на выход
-                    outputArray = new String[temporaryArray.length];
-                    for (int j = 0; j < temporaryArray.length; j++) {
-                        outputArray[j] = temporaryArray[j];
-                    }
-                } catch (FileNotFoundException e) {
-                    System.out.println("Вы ввели что-то не то " + e.getMessage());
-                } catch (IOException e) {
-                    System.out.println("Вы ввели что-то не то " + e.getMessage());
+        StringBuilder builder = new StringBuilder();
+        String[] inputArray = null;
+        try(BufferedReader reader = new BufferedReader(new FileReader(fileName))){
+            while ((line = reader.readLine()) != null){
+                line = line.trim();
+                if(line.contains(" ")){
+                    continue;
                 }
-                try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFileName))){
-                    //Разворачиваю массив, Если сортировка указана по убыванию
-                    if (typeOfSort.equalsIgnoreCase("d")) {
-                        for (int j = 0, k = outputArray.length - 1; j < k; j++, k--) {
-                            String temp = outputArray[k];
-                            outputArray[k] = outputArray[j];
-                            outputArray[j] = temp;
-                        }
-                    }
-                    //Записъ в файл
-                    for (int j = 0; j < outputArray.length; j++) {
-                        writer.write(outputArray[j] + "\n");
-                    }
-                } catch (IOException e) {
-                    System.out.println("Вы ввели что-то не то " + e.getMessage());
-                }
+                builder.append(line + "\n");
             }
-
-        } else {
-            int[] outputArray = new int[0];
-            for (int i = 0; i < strings.length; i++) {
-                try (BufferedReader reader = new BufferedReader(new FileReader(strings[i]))) {
-                    StringBuilder builder = new StringBuilder("");
-                    while ((line = reader.readLine()) != null) {
-                        line.trim();
-                        if(line.contains(" ")){
-                            continue;
-                        }
-                        builder.append(line + "\n");
-                    }
-                    String[] array = builder.toString().split("\n");
-                    int[] inputArray = new int[array.length];
-                    for(int j = 0; j < inputArray.length; j++){
-                        inputArray[j] = Integer.parseInt(array[j]);
-                    }
-                    int[] temporaryArray = new int[inputArray.length + outputArray.length];
-                    int inputPosition = 0;
-                    int outputPosition = 0;
-                    for (int j = 0; j < temporaryArray.length; j++) {
-                        if (inputPosition == inputArray.length) {
-                            temporaryArray[j] = outputArray[outputPosition++];
-                        } else if (outputPosition == outputArray.length) {
-                            temporaryArray[j] = inputArray[inputPosition++];
-                        } else if (inputArray[inputPosition] < (outputArray[outputPosition])) {
-                            temporaryArray[j] = inputArray[inputPosition++];
-                        } else {
-                            temporaryArray[j] = outputArray[outputPosition++];
-                        }
-                    }
-                    outputArray = new int[temporaryArray.length];
-                    for (int j = 0; j < temporaryArray.length; j++) {
-                        outputArray[j] = temporaryArray[j];
-                    }
-                } catch (FileNotFoundException e) {
-                    System.out.println("You entered something wrong " + e.getMessage());
-                } catch (IOException e) {
-                    System.out.println("You entered something wrong " + e.getMessage());;
-                }
-            }
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFileName))) {
-                if(typeOfSort.equalsIgnoreCase("d")){
-                    for(int j = 0, k = outputArray.length - 1; j < k; j++, k--){
-                        int temp = outputArray[k];
-                        outputArray[k] = outputArray[j];
-                        outputArray[j] = temp;
-                    }
-                }
-                for (int i = 0; i < outputArray.length; i++) {
-                    writer.write(outputArray[i] + "\n");
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            inputArray = builder.toString().split("\n");
+        } catch (FileNotFoundException e) {
+            System.out.println(new StringBuilder("Вы ввели что-то не то" + e.getMessage()));
+        } catch (IOException e) {
+            System.out.println(new StringBuilder("Вы ввели что-то не то" + e.getMessage()));
+        }
+        return inputArray;
+    }
+    //преобразование строкового массива в числовой
+    public static Integer[] convertStringArrayToInteger(String[] inputArray) throws NullPointerException{
+        Integer[] array = new Integer[inputArray.length];
+        for (int i = 0; i < inputArray.length; i++) {
+            try {
+                array[i] = Integer.parseInt(inputArray[i]);
+            } catch (NumberFormatException e) {
+                System.out.println("Вы ввели сортировку чисел, а передаете строку " + e.getMessage());
             }
         }
+        return array;
     }
-    public static <T> List<T> createList(T typeOfValue){
-        List<T> list = new ArrayList<>();
-        return list;
+    //сортировка
+    public static <T> List<T> sort(T[] inputArray, T[] outputArray) throws NullPointerException{
+        int inputPosition = 0;
+        int outputPosition = 0;
+        List<T> temporaryList = new ArrayList<>();
+        for (int j = 0; j < inputArray.length + outputArray.length; j++) {
+            if (inputPosition == inputArray.length) {
+                temporaryList.add(outputPosition + inputPosition, outputArray[outputPosition]);
+                outputPosition++;
+            } else if (outputPosition == outputArray.length) {
+                temporaryList.add(inputPosition + outputPosition, inputArray[inputPosition]);
+                inputPosition++;
+            } else if (comparing(outputArray[outputPosition], inputArray[inputPosition])) {
+                temporaryList.add(inputPosition + outputPosition, inputArray[inputPosition]);
+                inputPosition++;
+            } else {
+                temporaryList.add(outputPosition + inputPosition, outputArray[outputPosition]);
+                outputPosition++;
+            }
+        }
+        return temporaryList;
+    }
+    //сравнение двух элементов неизвестных типов данных
+    public static  <T> boolean comparing(T param, T param2){
+        if(param instanceof Integer){
+            return (Integer) param > (Integer) param2;
+        }
+        else  {
+            int x = ((String) param).compareTo(param2.toString());
+            return x > 0 ? true : false;
+        }
+    }
+    //Для разворота массива из сортировки по возрастанию в убывающий
+    public static <T> T[] reverseArray(T[] array){
+        for(int i = 0, j = array.length - 1; i < j; i++, j--){
+            T var = array[i];
+            array[i] = array[j];
+            array[j] = var;
+        }
+        return array;
+    }
+    // Для записи в выходной файл
+    public static <T> void writeOutputArray(T[] outputArray, String outputFileName){
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(outputFileName))){
+            for(int i = 0; i < outputArray.length; i++) {
+                writer.write(outputArray[i] + "\n");
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println(new StringBuilder("Вы ввели что-то не то" + e.getMessage()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public static void merge(String typeOfValue, String typeOfSort, String outputFileName, String... strings){
+        Integer[] outputIntegerArray = new Integer[0];
+        String[] outputStringArray = new String[0];
+        for(int i = 0; i < strings.length; i++){
+            //Записываю данные из файла в массив строк
+            try {
+                String[] inputArray = readInputFile(strings[i]);
+                //проверяю тип введеных данных
+                if(typeOfValue.equalsIgnoreCase("i")){
+                    //преобразую массив строк в массив чисел
+                    Integer[] inputArrayInteger = convertStringArrayToInteger(inputArray);
+                    //записываю результат сортировки 2 массивов в лист
+                    List<Integer> integerSortedList = sort(inputArrayInteger, outputIntegerArray);
+                    //Перезаписываю выходной массив чисел
+                    outputIntegerArray = new Integer[integerSortedList.size()];
+                    for(int k = 0; k < outputIntegerArray.length; k++){
+                        outputIntegerArray[k] = integerSortedList.get(k);
+                    }
+                } else if(typeOfValue.equalsIgnoreCase("s")){
+                    //так как здесь работа со строками то inputArray не недо конвертировать в числовой тип
+                    //записываю результат сортировки 2 массивов в лист
+                    List<String> stringSortedList = sort(inputArray, outputStringArray);
+                    //перезаписываю выходной массив строк
+                    outputStringArray = new String[stringSortedList.size()];
+                    for(int k = 0; k < outputStringArray.length; k++){
+                        outputStringArray[k] = stringSortedList.get(k);
+                    }
+                } else{
+                    System.out.println("тип данных должен быть либо строковый, либо числовой");
+                }
+            } catch (NullPointerException e) {
+                System.out.println(e.getMessage());
+            }
+
+        }
+        //если тип сортировки по убыванию, то разворачиваю отсортированный массив
+        if(typeOfSort.equalsIgnoreCase("d")){
+            if(outputIntegerArray.length != 0) {
+                outputIntegerArray = reverseArray(outputIntegerArray);
+            } else {
+                outputStringArray = reverseArray(outputStringArray);
+            }
+        }
+        //Запись выходного массива в выходной файл
+        if(outputIntegerArray.length != 0) {
+            writeOutputArray(outputIntegerArray, outputFileName);
+        } else {
+            writeOutputArray(outputStringArray, outputFileName);
+        }
     }
 }
